@@ -6,7 +6,7 @@ const knexConfig = {
   client: 'sqlite3', 
   useNullAsDefault: true, 
   connection: {
-    filename: './data/rolex.db3'
+    filename: './data/lambda.db3'
   }
 }
 
@@ -15,9 +15,9 @@ const db = knex(knexConfig);
 
 router.get('/', (req, res) => {
  
-  db('roles')
-  .then(roles => {
-    res.status(200).json(roles)
+  db('cohorts')
+  .then(cohorts => {
+    res.status(200).json(cohorts)
   })
   .catch(error => {
     res.status(500).json(error)
@@ -28,14 +28,14 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
 
-db('roles')
+db('cohorts')
 .where({id: req.params.id})
-.then(role => {
-  if(role) {
-    res.status(200).json(role);
+.then(cohort => {
+  if(cohort) {
+    res.status(200).json(cohort);
 
   }else {
-    res.status(404).json({message: 'Role id not found'})
+    res.status(404).json({message: 'Cohort id not found'})
   }
 })
 .catch(error => {
@@ -45,12 +45,12 @@ db('roles')
 
 router.post('/', (req, res) => {
   
-  db('roles')
+  db('cohorts')
   .insert(req.body)
-  .then(role => {
-    const [id] = role;
+  .then(cohort => {
+    const [id] = cohort;
 
-    db('roles')
+    db('cohorts')
     .where({id})
     .first()
     .then(role => {
@@ -66,19 +66,19 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
 
-  db('roles')
+  db('cohorts')
   .where({id: req.params.id})
   .update(req.body)
   .then(count => {
     if(count > 0){ 
-      db('roles')
+      db('cohorts')
       .where({id: req.params.id})
       .first()
       .then(role => {
         res.status(200).json(role)
       })
     }else{
-      res.status(404).json({message: 'role id not found'})
+      res.status(404).json({message: 'Cohort id not found'})
     }
   })
   .catch(error => {
@@ -88,14 +88,14 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
 
-  db('roles')
+  db('cohorts')
   .where({id: req.params.id})
   .del()
   .then(count => {
     if(count > 0) {
       res.status(204).end();
     }else{
-      res.status(404).json({message: 'role id not found'})
+      res.status(404).json({message: 'Cohort id not found'})
     }
   })
   .catch(error => {
